@@ -4,7 +4,7 @@ import os
 
 class BaseConfig:
 
-    SYSTEM_NAME = os.getenv('SYSTEM_NAME', 'Pear Admin')
+    SYSTEM_NAME = os.getenv('SYSTEM_NAME', '图片敏感文本检测系统')
     # 主题面板的链接列表配置
     SYSTEM_PANEL_LINKS = [
         {
@@ -24,7 +24,9 @@ class BaseConfig:
         }
     ]
 
-    UPLOADED_PHOTOS_DEST = 'static/upload'
+    #图片文件存放位置
+    # UPLOADED_PHOTOS_DEST = 'static/upload'
+    UPLOADED_PHOTOS_DEST = 'E:/textdetection_pic'
     UPLOADED_FILES_ALLOW = ['gif', 'jpg']
 
     # JSON配置
@@ -38,10 +40,10 @@ class BaseConfig:
 
     # mysql 配置
     MYSQL_USERNAME = os.getenv('MYSQL_USERNAME') or "root"
-    MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD') or "123456"
+    MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD') or "1234"
     MYSQL_HOST = os.getenv('MYSQL_HOST') or "127.0.0.1"
     MYSQL_PORT = int(os.getenv('MYSQL_PORT') or 3306)
-    MYSQL_DATABASE = os.getenv('MYSQL_DATABASE') or "PearAdminFlask"
+    MYSQL_DATABASE = os.getenv('MYSQL_DATABASE') or "BeshiFlask"
 
     # mysql 数据库的配置信息
     SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset=utf8mb4"
