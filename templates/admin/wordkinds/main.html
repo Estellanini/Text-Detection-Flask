@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>用户管理</title>
+    <title>敏感词分类</title>
     {% include 'admin/common/header.html' %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='/admin/admin/css/other/user.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/admin/admin/css/other/wordkinds.css') }}"/>
 </head>
 <body class="pear-container">
 {# 查询表单 #}
 <div class="layui-card">
     <div class="layui-card-body">
-        <form class="layui-form" action="" lay-filter="user-query-form">
+        <form class="layui-form" action="" lay-filter="wordkinds-query-form">
             <div class="layui-form-item">
-                <label class="layui-form-label">用户</label>
+                <label class="layui-form-label">分类名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="realName" placeholder="" class="layui-input">
+                    <input type="text" name="kindname" placeholder="" class="layui-input">
                 </div>
-                <label class="layui-form-label">账号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="username" placeholder="" class="layui-input">
-                </div>
-                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="wordkinds-query">
                     <i class="layui-icon layui-icon-search"></i>
                     查询
                 </button>
@@ -31,53 +27,40 @@
         </form>
     </div>
 </div>
-<div class="user-left user-collasped">
-    <div class="layui-card">
-        <div class="layui-card-body">
-            <div class="button button-primary user-group" user-group=""> 全 部 用 户</div>
-            <div class="button button-default user-group" user-group="-1"> 默 认 分 组</div>
-            <div style="overflow: auto">
-                <ul id="dept-tree" class="dept-tree" data-id="0"></ul>
-            </div>
-        </div>
-    </div>
-</div>
+
 {# 用户表格 #}
-<div class="user-main user-collasped">
+<div class="wordkinds-main wordkinds-collasped">
     <div class="layui-card">
         <div class="layui-card-body">
-            <table id="user-table" lay-filter="user-table"></table>
+            <table id="wordkinds-table" lay-filter="wordkinds-table"></table>
         </div>
     </div>
 </div>
 </body>
 {# 表格操作 #}
-<script type="text/html" id="user-toolbar">
-    {% if authorize("admin:user:add") %}
+<script type="text/html" id="wordkinds-toolbar">
+    {% if authorize("admin:wordkinds:add") %}
         <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
             <i class="pear-icon pear-icon-add"></i>
             新增
         </button>
     {% endif %}
-    {% if authorize("admin:user:remove") %}
+    {% if authorize("admin:wordkinds:remove") %}
         <button class="pear-btn pear-btn-md" lay-event="batchRemove">
             <i class="pear-icon pear-icon-ashbin"></i>
             删除
         </button>
     {% endif %}
-<!--    <button class="pear-btn pear-btn-md" lay-event="collasped">-->
-<!--        <i class="pear-icon pear-icon-modular"></i>-->
-<!--        高级-->
-<!--    </button>-->
+
 </script>
 
 {# 用户修改操作 #}
-<script type="text/html" id="user-bar">
-    {% if authorize("admin:user:edit") %}
+<script type="text/html" id="wordkinds-bar">
+    {% if authorize("admin:wordkinds:edit") %}
         <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="pear-icon pear-icon-edit"></i>
         </button>
     {% endif %}
-    {% if authorize("admin:user:remove") %}
+    {% if authorize("admin:wordkinds:remove") %}
         <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i
                 class="pear-icon pear-icon-ashbin"></i>
         </button>
@@ -85,19 +68,19 @@
 </script>
 
 {# 启动与禁用 #}
-<script type="text/html" id="user-enable">
+<script type="text/html" id="wordkinds-enable">
     <input type="checkbox" name="enable" value="{{ "{{ d.id }}" }}" lay-skin="switch" lay-text="启用|禁用"
-           lay-filter="user-enable"
+           lay-filter="wordkinds-enable"
             {{ "{{# if(d.enable==1){ }} checked {{# } }}" }} />
 </script>
 
 {# 用户注册时间 #}
-<script type="text/html" id="user-createTime">
+<script type="text/html" id="wordkinds-createTime">
     {{ '  {{layui.util.toDateString(d.create_at,  "yyyy-MM-dd HH:mm:ss")}' |safe }}}
 </script>
 
 {# 用户更新时间 #}
-<script type="text/html" id="user-updateTime">
+<script type="text/html" id="wordkinds-updateTime">
     {{ '  {{layui.util.toDateString(d.update_at,  "yyyy-MM-dd HH:mm:ss")}' |safe }}}
 </script>
 
@@ -108,63 +91,46 @@
     let table = layui.table
     let form = layui.form
     let $ = layui.jquery
-    let dtree = layui.dtree
+    //let dtree = layui.dtree
     let popup = layui.popup
     let common = layui.common
-    let MODULE_PATH = '/admin/user/'
+    let MODULE_PATH = '/admin/wordkinds/'
 
     // 表格数据
     let cols = [
       [
-        {% if authorize("admin:user:remove") %}
+        {% if authorize("admin:wordkinds:remove") %}
           { type: 'checkbox' },
         {% endif %}
-        { title: '姓名', field: 'realname', align: 'center', width: 110 },
-        { title: '账号', field: 'username', align: 'center' },
-        //{ title: '部门', field: 'dept', align: 'center' },
-        { title: '是否启用', field: 'enable', align: 'center', templet: '#user-enable', width: 120 },
-        { title: '注册时间', field: 'create_at', templet: '#user-createTime', align: 'center' },
-        { title: '更新时间', field: 'update_at', templet: '#user-updateTime', align: 'center' },
-        { title: '操作', toolbar: '#user-bar', align: 'center', width: 130 }
+        { title: '分类名称', field: 'kindname', align: 'center', width: 110 },
+        { title: '是否启用', field: 'enable', align: 'center', templet: '#wordkinds-enable', width: 120 },
+        { title: '备注', field: 'remark', align: 'center', width: 110 },
+        { title: '排序', field: 'sort', align: 'center' },
+        { title: '注册时间', field: 'create_at', templet: '#wordkinds-createTime', align: 'center' },
+        { title: '更新时间', field: 'update_at', templet: '#wordkinds-updateTime', align: 'center' }
       ]
     ]
 
     // 渲染表格数据
     table.render({
-      elem: '#user-table',
+      elem: '#wordkinds-table',
       url: MODULE_PATH + 'data',
       page: true,
       cols: cols,
       skin: 'line',
       height: 'full-148',
-      toolbar: '#user-toolbar', /*工具栏*/
-      text: { none: '暂无人员信息' },
+      toolbar: '#wordkinds-toolbar', /*工具栏*/
+      text: { none: '暂无敏感词分类信息' },
       defaultToolbar: [{ layEvent: 'refresh', icon: 'layui-icon-refresh' }, 'filter', 'print', 'exports'] /*默认工具栏*/
     })
 
-    // 公司部门树状图菜单
-    dtree.render({
-      elem: '#dept-tree',
-      method: 'get',
-      url: '/dept/tree',
-      dataFormat: 'list',
-      line: true,
-      skin: 'laySimple',
-      icon: '-1',
-      response: { treeId: 'deptId', parentId: 'parentId', title: 'deptName' },
-    })
 
-    // 菜单栏渲染
-    dtree.on('node(\'dept-tree\')', function (obj) {
-      let field = form.val('user-query-form') /*用户账号查询*/
-      field.deptId = obj.param.nodeId
-      window.refresh(field)
-    })
+
 
     //
-    $('.user-group').click(function () {
-      let group = $(this).attr('user-group')
-      let field = form.val('user-query-form')
+    $('.wordkinds-group').click(function () {
+      let group = $(this).attr('wordkinds-group')
+      let field = form.val('wordkinds-query-form')
       if (group === '-1') {
         field.deptId = group
         $(this).removeClass('button-default')
@@ -181,7 +147,7 @@
       window.refresh(field)
     })
 
-    table.on('tool(user-table)', function (obj) {
+    table.on('tool(wordkinds-table)', function (obj) {
       if (obj.event === 'remove') {
         window.remove(obj)
       } else if (obj.event === 'edit') {
@@ -189,7 +155,7 @@
       }
     })
 
-    table.on('toolbar(user-table)', function (obj) {
+    table.on('toolbar(wordkinds-table)', function (obj) {
       if (obj.event === 'add') {
         window.add()
       } else if (obj.event === 'refresh') {
@@ -197,18 +163,18 @@
       } else if (obj.event === 'batchRemove') {
         window.batchRemove(obj)
       } else if (obj.event === 'collasped') {
-        $('.user-left').toggleClass('user-collasped')
-        $('.user-main').toggleClass('user-collasped')
+        $('.wordkinds-left').toggleClass('wordkinds-collasped')
+        $('.wordkinds-main').toggleClass('wordkinds-collasped')
         table.resize()
       }
     })
 
-    form.on('submit(user-query)', function (data) {
+    form.on('submit(wordkinds-query)', function (data) {
       window.refresh(data.field)
       return false
     })
 
-    form.on('switch(user-enable)', function (obj) {
+    form.on('switch(wordkinds-enable)', function (obj) {
       let operate
       if (obj.elem.checked) {
         operate = 'enable'
@@ -217,8 +183,8 @@
       }
       let loading = layer.load()
       $.ajax({
-        url: '/admin/user/' + operate,
-        data: JSON.stringify({ userId: this.value }),
+        url: '/admin/wordkinds/' + operate,
+        data: JSON.stringify({ Id: this.value }),
         dataType: 'json',
         contentType: 'application/json',
         type: 'put',
@@ -285,7 +251,7 @@
         return false
       }
       var ids = []
-      var hasCheck = table.checkStatus('user-table')
+      var hasCheck = table.checkStatus('wordkinds-table')
       var hasCheckData = hasCheck.data
       if (hasCheckData.length > 0) {
         $.each(hasCheckData, function (index, element) {
@@ -309,7 +275,7 @@
             layer.close(loading)
             if (result.success) {
               popup.success(result.msg, function () {
-                table.reload('user-table')
+                table.reload('wordkinds-table')
               })
             } else {
               popup.failure(result.msg)
@@ -320,7 +286,7 @@
     }
 
     window.refresh = function (param) {
-      table.reload('user-table', { where: param })
+      table.reload('wordkinds-table', { where: param })
     }
   })
 </script>
