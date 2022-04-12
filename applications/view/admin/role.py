@@ -66,7 +66,7 @@ def save():
     )
     db.session.add(role)
     db.session.commit()
-    return success_api(msg="成功")
+    return success_api(msg="新增成功")
 
 
 # 角色授权

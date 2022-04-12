@@ -42,38 +42,38 @@ def data():
     return table_api(data=model_to_dicts(schema=WordkindsSchema, data=wordkinds.items), count=count)
 
 
-# # 用户增加
-# @admin_wordkinds.get('/add')
-# @authorize("admin:user:add", log=True)
-# def add():
-#     roles = Role.query.all()
-#     return render_template('admin/user/add.html', roles=roles)
-#
-#
-# @admin_wordkinds.post('/save')
-# @authorize("admin:user:add", log=True)
-# def save():
-#     req_json = request.json
-#     a = req_json.get("roleIds")
-#     username = xss_escape(req_json.get('username'))
-#     real_name = xss_escape(req_json.get('realName'))
-#     password = xss_escape(req_json.get('password'))
-#     role_ids = a.split(',')
-#
-#     if not username or not real_name or not password:
-#         return fail_api(msg="账号姓名密码不得为空")
-#
-#     if bool(User.query.filter_by(username=username).count()):
-#         return fail_api(msg="用户已经存在")
-#     user = User(username=username, realname=real_name)
-#     user.set_password(password)
-#     db.session.add(user)
-#     roles = Role.query.filter(Role.id.in_(role_ids)).all()
-#     for r in roles:
-#         user.role.append(r)
-#     db.session.commit()
-#     return success_api(msg="增加成功")
-#
+# 用户增加
+@admin_wordkinds.get('/add')
+@authorize("admin:wordkinds:add", log=True)
+def add():
+    return render_template('admin/wordkinds/add.html')
+
+
+@admin_wordkinds.post('/save')
+@authorize("admin:wordkinds:add", log=True)
+def save():
+    req_json = request.json
+    kindname = xss_escape(req_json.get('kindname'))
+    remark = xss_escape(req_json.get('remark'))
+    enable = xss_escape(req_json.get("enable"))
+    sort = xss_escape(req_json.get("sort"))
+
+
+    if not kindname:
+        return fail_api(msg="分类名称不得为空")
+
+    if bool(Wordkinds.query.filter_by(kindname=kindname).count()):
+        return fail_api(msg="该分类已经存在")
+    wordkinds = Wordkinds(
+        kindname=kindname,
+        enable=enable,
+        remark=remark,
+        sort=sort
+    )
+    db.session.add(wordkinds)
+    db.session.commit()
+    return success_api(msg="新增成功")
+
 #
 # # 删除用户
 # @admin_wordkinds.delete('/remove/<int:id>')
