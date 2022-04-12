@@ -70,8 +70,7 @@
 {# 启动与禁用 #}
 <script type="text/html" id="wordkinds-enable">
     <input type="checkbox" name="enable" value="{{ "{{ d.id }}" }}" lay-skin="switch" lay-text="启用|禁用"
-           lay-filter="wordkinds-enable"
-            {{ "{{# if(d.enable==1){ }} checked {{# } }}" }} />
+           lay-filter="wordkinds-enable" {{ "{{# if(d.enable==1){ }} checked {{# } }}" }} >
 </script>
 
 {# 用户注册时间 #}
@@ -107,8 +106,9 @@
         { title: '备注', field: 'remark', align: 'center', width: 150 },
         { title: '排序', field: 'sort', align: 'center' },
         { title: '注册时间', field: 'create_at', templet: '#wordkinds-createTime', align: 'center' },
-        { title: '更新时间', field: 'update_at', templet: '#wordkinds-updateTime', align: 'center' }
-      ]
+        { title: '更新时间', field: 'update_at', templet: '#wordkinds-updateTime', align: 'center' },
+        { title: '操作', toolbar: '#wordkinds-bar', align: 'center', width: 130 }
+        ]
     ]
 
     // 渲染表格数据
