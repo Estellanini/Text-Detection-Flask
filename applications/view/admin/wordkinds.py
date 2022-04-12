@@ -9,8 +9,6 @@ from applications.common.utils.http import table_api, fail_api, success_api
 from applications.common.utils.rights import authorize
 from applications.common.utils.validate import xss_escape
 from applications.extensions import db
-from applications.models import Role
-from applications.models import User, AdminLog
 from applications.models import Wordkinds
 from applications.schemas import WordkindsSchema
 
@@ -74,21 +72,21 @@ def save():
     db.session.commit()
     return success_api(msg="新增成功")
 
-#
-# # 删除用户
-# @admin_wordkinds.delete('/remove/<int:id>')
-# @authorize("admin:user:remove", log=True)
-# def delete(id):
-#     user = User.query.filter_by(id=id).first()
-#     user.role = []
-#
-#     res = User.query.filter_by(id=id).delete()
-#     db.session.commit()
-#     if not res:
-#         return fail_api(msg="删除失败")
-#     return success_api(msg="删除成功")
-#
-#
+
+# 删除用户
+@admin_wordkinds.delete('/remove/<int:id>')
+@authorize("admin:wordkinds:remove", log=True)
+def delete(id):
+    wordkinds = Wordkinds.query.filter_by(id=id).first()
+    Wordkinds.role = []
+
+    res = Wordkinds.query.filter_by(id=id).delete()
+    db.session.commit()
+    if not res:
+        return fail_api(msg="删除失败")
+    return success_api(msg="删除成功")
+
+
 
 
 #  敏感词分类编辑
@@ -117,27 +115,7 @@ def update():
         return fail_api(msg="更新敏感词分类失败")
     return success_api(msg="更新敏感词分类成功")
 
-
-
-
-#
-#
-#
-# # 修改当前用户信息
-# @admin_wordkinds.put('/updateInfo')
-# @login_required
-# def update_info():
-#     req_json = request.json
-#     r = User.query.filter_by(id=current_user.id).update(
-#         {"realname": req_json.get("realName"), "remark": req_json.get("details")})
-#     db.session.commit()
-#     if not r:
-#         return fail_api(msg="出错啦")
-#     return success_api(msg="更新成功")
-#
-
-
-# 启用用户
+# 启用该分类
 @admin_wordkinds.put('/enable')
 @authorize("admin:wordkinds:edit", log=True)
 def enable():
@@ -150,7 +128,7 @@ def enable():
     return fail_api(msg="启用失败")
 
 
-# 禁用用户
+# 禁用该分类
 @admin_wordkinds.put('/disable')
 @authorize("admin:wordkinds:edit", log=True)
 def dis_enable():
@@ -163,15 +141,13 @@ def dis_enable():
     return fail_api(msg="禁用失败")
 
 
-# # 批量删除
-# @admin_wordkinds.delete('/batchRemove')
-# @authorize("admin:user:remove", log=True)
-# def batch_remove():
-#     ids = request.form.getlist('ids[]')
-#     for id in ids:
-#         user = User.query.filter_by(id=id).first()
-#         user.role = []
-#
-#         res = User.query.filter_by(id=id).delete()
-#         db.session.commit()
-#     return success_api(msg="批量删除成功")
+# 批量删除
+@admin_wordkinds.delete('/batchRemove')
+@authorize("admin:wordkinds:remove", log=True)
+def batch_remove():
+    ids = request.form.getlist('ids[]')
+    for id in ids:
+        wordkinds = Wordkinds.query.filter_by(id=id).first()
+        res = Wordkinds.query.filter_by(id=id).delete()
+        db.session.commit()
+    return success_api(msg="批量删除成功")
