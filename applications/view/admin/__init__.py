@@ -10,6 +10,7 @@ from applications.view.admin.user import admin_user
 from applications.view.admin.monitor import admin_monitor_bp
 from applications.view.admin.task import admin_task
 from applications.view.admin.wordkinds import admin_wordkinds
+from applications.view.admin.ocr import admin_ocr
 
 
 def register_admin_views(app: Flask):
@@ -23,3 +24,4 @@ def register_admin_views(app: Flask):
     app.register_blueprint(admin_dict)
     app.register_blueprint(admin_task)
     app.register_blueprint(admin_wordkinds)
+    app.register_blueprint(admin_ocr)

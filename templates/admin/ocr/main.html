@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>图片检测的新增图片</title>
+    {% include 'admin/common/header.html' %}
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-tab-content">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>图片文本区域定位 | 图片文本识别 | 敏感文本判别</legend>
+                </fieldset>
+                <form class="layui-form edit-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请选择：</label>
+                        <button type="button" class="layui-btn layui-btn-normal" id="ready-img-button">选择图片</button>
+                        <button type="button" class="layui-btn" id="logo-upload-button">开始上传</button>
+                        <span id='fileName'></span>
+
+                    </div>
+                    <div class="layui-collapse" lay-accordion="" style="width: 399.5px">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">展开图片</h2>
+                            <div class="layui-colla-content" id="colla_img" style="">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'admin/common/footer.html' %}
+<script>
+    layui.use(['jquery', 'element', 'form', 'upload'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var form = layui.form;
+        var upload = layui.upload;
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#ready-img-button',
+            url: "{{ url_for('adminFile.upload_api') }}",
+            auto: false,
+            exts: 'jpg|png|gif|bmp|jpeg',
+            size: 0,
+            multiple: true,
+            number: 5,
+            bindAction: '#logo-upload-button',
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $("#fileName").val(file.name);
+                    $('#colla_img').find('img').remove();
+                    $('#colla_img').append('<a href="#" onclick="openImg();"><img id="showImg" src="' + result + '" width="370px"></a>');
+                });
+            },
+            before:function(obj){
+                console.log("上传前")
+            },
+            done: function (res) {
+                if (res.success) {
+                    layer.msg(res.msg, {icon: 1, time: 500}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                        //window.parent.location.reload();
+                    });
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                }
+            }
+        });
+
+    });
+        /*查看大图*/
+function openImg() {
+    var idBar = '#showImg';
+    var src = $(idBar)[0].src;
+    var width = $(idBar).width();
+    var height = $(idBar).height();
+    var scaleWH = width / height;
+    var bigH = 550;
+    var bigW = scaleWH * bigH;
+    if (bigW > 1000) {
+        bigW = 1000;
+        bigH = bigW / scaleWH;
+    } // 放大预览图片
+    parent.layer.open({
+        type: 1,
+        title: false,
+        closeBtn: 1,
+        shadeClose: true,
+        area: [bigW + 'px', bigH + 'px'], //宽高
+        content: '<img width="' + bigW + '" src="' + src + '" />'
+    });
+}
+
+</script>
+</body>
+</html>

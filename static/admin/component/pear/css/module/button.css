@@ -24,7 +24,7 @@
 .pear-btn:hover {
 	opacity: .8;
 	filter: alpha(opacity=80);
-	color: #409eff;
+	color: #FFB800;
 	background-color: #ECF5FF;
 }
 
@@ -38,8 +38,8 @@
 }
 /** Button 主题 */
 .pear-btn-primary {
-	background-color: #2D8CF0 !important;
-	border: #2D8CF0;
+	background-color: #FFB800 !important;
+	border: #FFB800;
 }
 .pear-btn-danger {
 	background-color: #f56c6c !important;

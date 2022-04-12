@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>图片上传</title>
+    <title>检测结果汇总</title>
     {% include 'admin/common/header.html' %}
 </head>
 <body class="pear-container">
@@ -10,18 +10,18 @@
         <table id="dataTable" lay-filter="dataTable"></table>
     </div>
 </div>
-
+</body>
 <script type="text/html" id="toolbar">
-    {% if authorize("admin:file:add") %}
-        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="add">
-            <i class="layui-icon layui-icon-add-1"></i>
-            新增
-        </button>
-    {% endif %}
+<!--    {% if authorize("admin:file:add") %}-->
+<!--        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="add">-->
+<!--            <i class="layui-icon layui-icon-add-1"></i>-->
+<!--            新增-->
+<!--        </button>-->
+<!--    {% endif %}-->
     {% if authorize("admin:file:delete") %}
         <button class="pear-btn pear-btn-sm" lay-event="batchRemove">
             <i class="layui-icon layui-icon-delete"></i>
-            删除
+            批量删除
         </button>
     {% endif %}
 </script>
