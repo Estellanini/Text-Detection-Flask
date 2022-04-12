@@ -25,26 +25,8 @@
                     <p style="padding-top: 8px;margin-top: 10px;font-size: 13.5px;">China ， 中国</p>
                 </div>
             </div>
-            <div style="height: 45px;border-top: 1px whitesmoke solid;text-align: center;line-height: 45px;font-size: 13.5px;">
-                <span>{{ user_info.remark }}</span>
-            </div>
         </div>
-        {# 登录信息卡片 #}
-        <div class="layui-card">
-            <div class="layui-card-header">
-                登录记录
-            </div>
-            <div class="layui-card-body">
-                <ul class="list">
-                    {% for log in user_logs %}
-                        <li class="list-item">
-                            <span class="title">{{ log.url }}</span>
-                            <span class="footer">{{ log.create_time }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+
     </div>
     {# 右侧栏 #}
     <div class="layui-col-md9">
@@ -72,14 +54,6 @@
                                                autocomplete="off" placeholder="请输入标题" class="layui-input">
                                     </div>
                                 </div>
-
-                                <div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">描述</label>
-                                    <div class="layui-input-block">
-                                        <textarea placeholder="请输入描述" name="details"
-                                                  class="layui-textarea">{{ user_info.remark }}</textarea>
-                                    </div>
-                                </div>
                                 <div class="layui-form-item">
                                     <div class="layui-input-block">
                                         <button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
@@ -95,79 +69,7 @@
             </div>
         </div>
         {# 个人文章记录 #}
-        <div class="layui-card">
-            <div class="layui-card-header">
-                我的文章
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-                    <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
-                            <div class="layui-row layui-col-space10" style="margin: 15px;">
-                                <div class="layui-col-md1">
-                                    <img src="{{ url_for('static', filename='admin/admin/images/act.jpg') }}"
-                                         style="width: 100%;height: 100%;border-radius: 5px;"/>
-                                </div>
-                                <div class="layui-col-md11" style="height: 80px;">
-                                    <div class="title">为什么程序员们愿意在GitHub上开源自己的成果给别人免费使用和学习？</div>
-                                    <div class="content">
-                                        “Git的精髓在于让所有人的贡献无缝合并。而GitHub的天才之处，在于理解了Git的精髓。”来一句我们程序员们接地气的话：分享是一种快乐~
-                                    </div>
-                                    <div class="comment">2020-06-12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 评论 5 点赞 12 转发
-                                        4
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-col-space10" style="margin: 15px;">
-                                <div class="layui-col-md1">
-                                    <img src="{{ url_for('static', filename='admin/admin/images/act.jpg') }}"
-                                         style="width: 100%;height: 100%;border-radius: 5px;"/>
-                                </div>
-                                <div class="layui-col-md11" style="height: 80px;">
-                                    <div class="title">为什么程序员们愿意在GitHub上开源自己的成果给别人免费使用和学习？</div>
-                                    <div class="content">
-                                        “Git的精髓在于让所有人的贡献无缝合并。而GitHub的天才之处，在于理解了Git的精髓。”来一句我们程序员们接地气的话：分享是一种快乐~
-                                    </div>
-                                    <div class="comment">2020-06-12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 评论 5 点赞 12 转发
-                                        4
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-col-space10" style="margin: 15px;">
-                                <div class="layui-col-md1">
-                                    <img src="{{ url_for('static', filename='admin/admin/images/act.jpg') }}"
-                                         style="width: 100%;height: 100%;border-radius: 5px;"/>
-                                </div>
-                                <div class="layui-col-md11" style="height: 80px;">
-                                    <div class="title">为什么程序员们愿意在GitHub上开源自己的成果给别人免费使用和学习？</div>
-                                    <div class="content">
-                                        “Git的精髓在于让所有人的贡献无缝合并。而GitHub的天才之处，在于理解了Git的精髓。”来一句我们程序员们接地气的话：分享是一种快乐~
-                                    </div>
-                                    <div class="comment">2020-06-12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 评论 5 点赞 12 转发
-                                        4
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-col-space10" style="margin: 15px;">
-                                <div class="layui-col-md1">
-                                    <img src="{{ url_for('static', filename='admin/admin/images/act.jpg') }}"
-                                         style="width: 100%;height: 100%;border-radius: 5px;"/>
-                                </div>
-                                <div class="layui-col-md11" style="height: 80px;">
-                                    <div class="title">为什么程序员们愿意在GitHub上开源自己的成果给别人免费使用和学习？</div>
-                                    <div class="content">
-                                        “Git的精髓在于让所有人的贡献无缝合并。而GitHub的天才之处，在于理解了Git的精髓。”来一句我们程序员们接地气的话：分享是一种快乐~
-                                    </div>
-                                    <div class="comment">2020-06-12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 评论 5 点赞 12 转发
-                                        4
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 {% include 'admin/common/footer.html' %}
