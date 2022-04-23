@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>敏感词列表</title>
+    {% include 'admin/common/header.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='/admin/admin/css/other/wordlist.css') }}"/>
+</head>
+<body class="pear-container">
+{# 查询表单 #}
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="" lay-filter="wordlist-query-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">敏感词名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="wordname" placeholder="" class="layui-input">
+                </div>
+                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="wordlist-query">
+                    <i class="layui-icon layui-icon-search"></i>
+                    查询
+                </button>
+                <button type="reset" class="pear-btn pear-btn-md">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# 用户表格 #}
+<div class="wordlist-main wordlist-collasped">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="wordlist-table" lay-filter="wordlist-table"></table>
+        </div>
+    </div>
+</div>
+</body>
+{# 表格操作 #}
+<script type="text/html" id="wordlist-toolbar">
+    {% if authorize("admin:wordlist:add") %}
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="pear-icon pear-icon-add"></i>
+            新增
+        </button>
+    {% endif %}
+    {% if authorize("admin:wordlist:remove") %}
+        <button class="pear-btn pear-btn-md" lay-event="batchRemove">
+            <i class="pear-icon pear-icon-ashbin"></i>
+            删除
+        </button>
+    {% endif %}
+
+</script>
+
+{# 用户修改操作 #}
+<script type="text/html" id="wordlist-bar">
+    {% if authorize("admin:wordlist:edit") %}
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="pear-icon pear-icon-edit"></i>
+        </button>
+    {% endif %}
+    {% if authorize("admin:wordlist:remove") %}
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i
+                class="pear-icon pear-icon-ashbin"></i>
+        </button>
+    {% endif %}
+</script>
+
+{# 启动与禁用 #}
+<script type="text/html" id="wordlist-enable">
+    <input type="checkbox" name="enable" value="{{ "{{ d.id }}" }}" lay-skin="switch" lay-text="启用|禁用"
+           lay-filter="wordlist-enable" {{ "{{# if(d.enable==1){ }} checked {{# } }}" }} >
+</script>
+
+{# 用户注册时间 #}
+<script type="text/html" id="wordlist-createTime">
+    {{ '  {{layui.util.toDateString(d.create_at,  "yyyy-MM-dd HH:mm:ss")}' |safe }}}
+</script>
+
+{# 用户更新时间 #}
+<script type="text/html" id="wordlist-updateTime">
+    {{ '  {{layui.util.toDateString(d.update_at,  "yyyy-MM-dd HH:mm:ss")}' |safe }}}
+</script>
+
+{% include 'admin/common/footer.html' %}
+
+<script>
+  layui.use(['table', 'dtree', 'form', 'jquery', 'popup', 'common'], function () {
+    let table = layui.table
+    let form = layui.form
+    let $ = layui.jquery
+    let popup = layui.popup
+    let common = layui.common
+    let MODULE_PATH = '/admin/wordlist/'
+
+    // 表格数据
+    let cols = [
+      [
+        {% if authorize("admin:wordlist:remove") %}
+          { type: 'checkbox' },
+        {% endif %}
+        { title: '敏感词名称', field: 'wordname', align: 'center', width: 150 },
+        { title: '是否启用', field: 'enable', align: 'center', templet: '#wordlist-enable', width: 150 },
+        { title: '注册时间', field: 'create_at', templet: '#wordlist-createTime', align: 'center' },
+        { title: '更新时间', field: 'update_at', templet: '#wordlist-updateTime', align: 'center' },
+        { title: '操作', toolbar: '#wordlist-bar', align: 'center', width: 130 }
+        ]
+    ]
+
+    // 渲染表格数据
+    table.render({
+      elem: '#wordlist-table',
+      url: MODULE_PATH + 'data',
+      page: true,
+      cols: cols,
+      skin: 'line',
+      height: 'full-148',
+      toolbar: '#wordlist-toolbar', /*工具栏*/
+      text: { none: '暂无敏感词信息' },
+      defaultToolbar: [{ layEvent: 'refresh', icon: 'layui-icon-refresh' }, 'filter', 'print', 'exports'] /*默认工具栏*/
+    })
+
+
+
+
+    //
+    $('.wordlist-group').click(function () {
+      let group = $(this).attr('wordlist-group')
+      let field = form.val('wordlist-query-form')
+      if (group === '-1') {
+        field.deptId = group
+        $(this).removeClass('button-default')
+        $(this).prev().removeClass('button-primary')
+        $(this).prev().addClass('button-default')
+        $(this).addClass('button-primary')
+      } else {
+        field.deptId = group
+        $(this).removeClass('button-default')
+        $(this).next().removeClass('button-primary')
+        $(this).next().addClass('button-default')
+        $(this).addClass('button-primary')
+      }
+      window.refresh(field)
+    })
+
+    table.on('tool(wordlist-table)', function (obj) {
+      if (obj.event === 'remove') {
+        window.remove(obj)
+      } else if (obj.event === 'edit') {
+        window.edit(obj)
+      }
+    })
+
+    table.on('toolbar(wordlist-table)', function (obj) {
+      if (obj.event === 'add') {
+        window.add()
+      } else if (obj.event === 'refresh') {
+        window.refresh()
+      } else if (obj.event === 'batchRemove') {
+        window.batchRemove(obj)
+      } else if (obj.event === 'collasped') {
+        $('.wordlist-left').toggleClass('wordlist-collasped')
+        $('.wordlist-main').toggleClass('wordlist-collasped')
+        table.resize()
+      }
+    })
+
+    form.on('submit(wordlist-query)', function (data) {
+      window.refresh(data.field)
+      return false
+    })
+
+    form.on('switch(wordlist-enable)', function (obj) {
+      let operate
+      if (obj.elem.checked) {
+        operate = 'enable'
+      } else {
+        operate = 'disable'
+      }
+      let loading = layer.load()
+      $.ajax({
+        url: '/admin/wordlist/' + operate,
+        data: JSON.stringify({ Id: this.value }),
+        dataType: 'json',
+        contentType: 'application/json',
+        type: 'put',
+        success: function (result) {
+          layer.close(loading)
+          if (result.success) {
+            popup.success(result.msg)
+          } else {
+            popup.failure(result.msg)
+          }
+        }
+      })
+    })
+
+    window.add = function () {
+      layer.open({
+        type: 2,
+        title: '新增',
+        shade: 0.1,
+        area: ['550px', '550px'],
+        content: MODULE_PATH + 'add'
+      })
+    }
+
+    window.edit = function (obj) {
+      layer.open({
+        type: 2,
+        title: '修改',
+        shade: 0.1,
+        area: ['550px', '500px'],
+        content: MODULE_PATH + 'edit/' + obj.data['id']
+      })
+    }
+
+    window.remove = function (obj) {
+      layer.confirm('确定要删除该敏感词分类', { icon: 3, title: '提示' }, function (index) {
+        layer.close(index)
+        let loading = layer.load()
+        $.ajax({
+          url: MODULE_PATH + 'remove/' + obj.data['id'],
+          dataType: 'json',
+          type: 'delete',
+          success: function (result) {
+            layer.close(loading)
+            if (result.success) {
+              popup.success(result.msg, function () {
+                obj.del()
+              })
+            } else {
+              popup.failure(result.msg)
+            }
+          }
+        })
+      })
+    }
+
+    window.batchRemove = function (obj) {
+      let data = table.checkStatus(obj.config.id).data
+      if (data.length === 0) {
+        layer.msg('未选中数据', {
+          icon: 3,
+          time: 1000
+        })
+        return false
+      }
+      var ids = []
+      var hasCheck = table.checkStatus('wordlist-table')
+      var hasCheckData = hasCheck.data
+      if (hasCheckData.length > 0) {
+        $.each(hasCheckData, function (index, element) {
+          ids.push(element.id)
+        })
+      }
+      {#console.log(ids);#}
+      layer.confirm('确定要删除选中敏感词分类', {
+        icon: 3,
+        title: '提示'
+      }, function (index) {
+        layer.close(index)
+        let loading = layer.load()
+        $.ajax({
+
+          url: MODULE_PATH + 'batchRemove',
+          data: { ids: ids },
+          dataType: 'json',
+          type: 'delete',
+          success: function (result) {
+            layer.close(loading)
+            if (result.success) {
+              popup.success(result.msg, function () {
+                table.reload('wordlist-table')
+              })
+            } else {
+              popup.failure(result.msg)
+            }
+          }
+        })
+      })
+    }
+
+    window.refresh = function (param) {
+      table.reload('wordlist-table', { where: param })
+    }
+  })
+</script>
+</html>
