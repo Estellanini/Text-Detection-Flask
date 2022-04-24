@@ -101,6 +101,7 @@
           { type: 'checkbox' },
         {% endif %}
         { title: '敏感词名称', field: 'wordname', align: 'center', width: 150 },
+        //{ title: '分类',field:'word_kindid', align: 'center', width: 150 },
         { title: '是否启用', field: 'enable', align: 'center', templet: '#wordlist-enable', width: 150 },
         { title: '注册时间', field: 'create_at', templet: '#wordlist-createTime', align: 'center' },
         { title: '更新时间', field: 'update_at', templet: '#wordlist-updateTime', align: 'center' },
@@ -217,7 +218,7 @@
     }
 
     window.remove = function (obj) {
-      layer.confirm('确定要删除该敏感词分类', { icon: 3, title: '提示' }, function (index) {
+      layer.confirm('确定要删除该敏感词', { icon: 3, title: '提示' }, function (index) {
         layer.close(index)
         let loading = layer.load()
         $.ajax({
@@ -256,7 +257,7 @@
         })
       }
       {#console.log(ids);#}
-      layer.confirm('确定要删除选中敏感词分类', {
+      layer.confirm('确定要删除选中敏感词', {
         icon: 3,
         title: '提示'
       }, function (index) {

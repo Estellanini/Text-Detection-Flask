@@ -73,7 +73,7 @@ def save():
     return success_api(msg="新增成功")
 
 
-# 删除用户
+# 删除敏感词分类
 @admin_wordkinds.delete('/remove/<int:id>')
 @authorize("admin:wordkinds:remove", log=True)
 def delete(id):
