@@ -16,26 +16,45 @@ admin_ocr = Blueprint('adminOcr', __name__, url_prefix='/admin/ocr')
 def index():
     return render_template('admin/ocr/main.html')
 
-# 图片上传
-@admin_ocr.get('/upload')
-def upload():
-    return render_template('admin/ocr/main.html')
+# # 图片上传
+# @admin_ocr.get('/upload')
+# def upload():
+#     return render_template('admin/ocr/main.html')
+#
+#
+# #   上传接口
+# @admin_ocr.post('/upload')
+# def upload_api():
+#     if 'file' in request.files:
+#         photo = request.files['file']
+#         mime = request.files['file'].content_type
+#
+#         file_url = upload_curd.upload_one(photo=photo, mime=mime)
+#         res = {
+#             "msg": "上传成功",
+#             "code": 0,
+#             "success": True,
+#             "data":
+#                 {"src": file_url}
+#         }
+#         return jsonify(res)
+#     return fail_api()
 
-
-#   上传接口
-@admin_ocr.post('/upload')
-def upload_api():
-    if 'file' in request.files:
-        photo = request.files['file']
-        mime = request.files['file'].content_type
-
-        file_url = upload_curd.upload_one(photo=photo, mime=mime)
-        res = {
-            "msg": "上传成功",
-            "code": 0,
-            "success": True,
-            "data":
-                {"src": file_url}
-        }
-        return jsonify(res)
-    return fail_api()
+# #   上传接口
+# @admin_file.post('/upload')
+# @authorize("admin:file:add", log=True)
+# def upload_api():
+#     if 'file' in request.files:
+#         photo = request.files['file']
+#         mime = request.files['file'].content_type
+#
+#         file_url = upload_curd.upload_one(photo=photo, mime=mime)
+#         res = {
+#             "msg": "上传成功",
+#             "code": 0,
+#             "success": True,
+#             "data":
+#                 {"src": file_url}
+#         }
+#         return jsonify(res)
+#     return fail_api()

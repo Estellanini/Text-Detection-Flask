@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>图片检测的新增图片</title>
+    <title>图片敏感文本检测</title>
     {% include 'admin/common/header.html' %}
 </head>
 <body>
@@ -10,23 +10,37 @@
         <div class="layui-card">
             <div class="layui-tab-content">
                 <fieldset class="layui-elem-field layui-field-title">
-                    <legend>图片文本区域定位 | 图片文本识别 | 敏感文本判别</legend>
+                    <legend>————————————————————   图片敏感文本检测   ———————————————————</legend>
                 </fieldset>
                 <form class="layui-form edit-form">
                     <div class="layui-form-item">
                         <label class="layui-form-label">请选择：</label>
                         <button type="button" class="layui-btn layui-btn-normal" id="ready-img-button">选择图片</button>
                         <button type="button" class="layui-btn" id="logo-upload-button">开始上传</button>
+                        <button type="button" class="layui-btn" id="logo-textdetection-button" style="background-color:orange">开始检测</button>
                         <span id='fileName'></span>
 
                     </div>
-                    <div class="layui-collapse" lay-accordion="" style="width: 399.5px">
+                   <div class="layui-collapse" lay-accordion="" style="width: 399.5px;margin-left: 50px">
                         <div class="layui-colla-item">
                             <h2 class="layui-colla-title">展开图片</h2>
-                            <div class="layui-colla-content" id="colla_img" style="">
+                            <div class="layui-colla-content" id="colla_img">
                             </div>
                         </div>
-                    </div>
+                  </div>
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-left:-5px;margin-top:20px;">
+                        <legend>图片检测结果：</legend>
+                    </fieldset>
+                     <div class="layui-row layui-col-space15" style="margin-left:15px;margin-top:10px;width:2000px;">
+                        <div class="layui-col-md6">
+                            <div class="layui-panel">
+                                <div style="padding: 30px;">非敏感，允许后续操作</div>
+                            </div>
+                        </div>
+                     </div>
+<!--                        <img src="{{ url_for('static', filename='/index/images/img_598.jpg') }}" style="height:300px;"/>-->
+<!--                        <img src="{{ url_for('static', filename='/index/images/img_598_pred.jpg') }}" style="height:300px;"/>-->
+<!--                        <img src="{{ url_for('static', filename='/index/images/img_598_result.jpg') }}" style="height:300px;"/>-->
                 </form>
             </div>
         </div>
@@ -53,7 +67,7 @@
                 obj.preview(function (index, file, result) {
                     $("#fileName").val(file.name);
                     $('#colla_img').find('img').remove();
-                    $('#colla_img').append('<a href="#" onclick="openImg();"><img id="showImg" src="' + result + '" width="370px"></a>');
+                    $('#colla_img').append('<a href="#" onclick="openImg();"><img id="showImg" src="' + result + '" height="250px"></a>');
                 });
             },
             before:function(obj){

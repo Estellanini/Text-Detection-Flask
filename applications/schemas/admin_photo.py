@@ -8,5 +8,6 @@ class PhotoOutSchema(ma.Schema):
     href = fields.Str()
     mime = fields.Str()
     size = fields.Str()
+    flag = fields.Boolean()
     ext = fields.Str()
     create_time = fields.DateTime()

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>上传文本</title>
+    {% include 'admin/common/header.html' %}
+</head>
+<body>
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-tab-content">
+                <fieldset class="layui-elem-field layui-field-title" style="margin-left:-5px;">
+                    <legend>—————————————————————   敏感词提取   —————————————————————</legend>
+                    <legend>请输入待检测文本：</legend>
+                </fieldset>
+                <form action="#" class="layui-form">
+                    <textarea id="input_textarea" lay-verify="required" type="text" placeholder="在此处输入" name="input_text" style="margin-left:20px;width:970px;height:120px" ></textarea>
+                    <button id="btnSubmit" class="button_login layui-btn" lay-submit lay-filter="btnSubmit" style="margin-left:20px;margin-top:10px">开始提取</button>
+                </form>
+                <div>
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-left:-5px;margin-top:20px;">
+                        <legend>敏感词提取结果：</legend>
+                    </fieldset>
+                     <div class="layui-row layui-col-space15" style="margin-left:15px;margin-top:20px;width:2000px;">
+                        <div class="layui-col-md6">
+                            <div class="layui-panel">
+                                <div style="padding: 30px;">TO DO</div>
+                            </div>
+                        </div>
+                     </div>
+                    <div>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-left:-5px;margin-top:20px;">
+                        <legend>敏感词过滤结果：</legend>
+                    </fieldset>
+                     <div class="layui-row layui-col-space15" style="margin-left:15px;margin-top:20px;width:2000px;">
+                        <div class="layui-col-md6">
+                            <div class="layui-panel">
+                             <div style="padding: 30px;">TO DO</div>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'admin/common/footer.html' %}
+<script>
+layui.use(['element', 'form'], function(){
+  var element = layui.element;
+  var form = layui.form;
+  var input_text="";
+  var a=12345;
+  //监听提交
+  form.on('submit(btnSubmit)', function(data){
+      input_text = data.field.input_text;
+      //console.log(input_text)
+      alert(input_text)
+  });
+  element.render('collapse');
+});
+</script>
+</body>
+</html>
