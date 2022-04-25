@@ -13,6 +13,7 @@ from applications.view.admin.wordkinds import admin_wordkinds
 from applications.view.admin.ocr import admin_ocr
 from applications.view.admin.wordlist import admin_wordlist
 from applications.view.admin.text import admin_text
+from applications.view.admin.pic import admin_pic
 
 
 def register_admin_views(app: Flask):
@@ -29,3 +30,4 @@ def register_admin_views(app: Flask):
     app.register_blueprint(admin_ocr)
     app.register_blueprint(admin_wordlist)
     app.register_blueprint(admin_text)
+    app.register_blueprint(admin_pic)
